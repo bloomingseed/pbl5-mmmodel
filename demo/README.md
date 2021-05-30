@@ -12,3 +12,9 @@ Where option is one of:
 --video_path: Takes a path to video file
 --image_path: Takes a path to image file. For this option, you can also specify --output_path which takes a path to save output image which will have bounding boxes and confidence scores on the image
 --is_verbose: Takes True or False value. Default is True and it will prints detection results and the filtering process to console (terminal).
+
+# Demo results
+- See images `results-demo-?.jpg` and `results-demo-console.jpg`.
+- Performance:
+   - Average inference time: 1571.152ms
+   - Average interval: 2071.220ms

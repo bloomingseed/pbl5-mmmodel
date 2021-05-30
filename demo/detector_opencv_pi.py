@@ -92,7 +92,7 @@ def image_detect(img_path, save_path='predictions.jpg'):
 		print('Per class colors: ',colors)
 	image, height, width, channels = load_image(img_path)
 	blob, outputs, elapsed = detect_objects(image, model, output_layers)
-	print('Prediction done in %.6f'%elapsed)	# debugging
+	print('Prediction done in %.3fms'%(elapsed*1000))	# debugging
 	boxes, confs, class_ids = get_box_dimensions(outputs, height, width, cfd_threshold)
 	indexes = nms_bboxes(boxes,confs,cfd_threshold,nms_threshold) 	# performs nms to get final results
 	if is_verbose:
@@ -104,6 +104,7 @@ def image_detect(img_path, save_path='predictions.jpg'):
 		print('NMS results:')
 		print(indexes)
 	img = draw_labels(boxes, confs, colors, class_ids, classes, image, indexes)
+	print(len(indexes),is_verbose and len(indexes)>0)
 	cv2.imwrite(save_path,img)
 
 def start_video(video_path):
@@ -136,41 +137,50 @@ def setup_camera(resolution, framerate):
     camera.framerate = framerate
     return camera   
 
-def send_notification(boxes, confs, class_ids, indexes):
-    '''Handle logic to send output to buzzer notification'''
-    # TODO: implement this function
-    pass
+def get_timestamp():
+	from datetime import datetime
+	d = datetime.now()
+	return '%sT%s'%(d.strftime('%Y%m%d'),d.strftime('%X').replace(':',''))
+
+def send_notification(boxes, confs, colors, class_ids, classes, image, indexes):
+	'''Handle logic to send output to buzzer notification'''
+	# TODO: implement this function to send notification to buzzer
+	if is_verbose and len(indexes)>0:
+		save_path = './%s.jpg'%get_timestamp()	# sets save image path
+		print('Saving output image to %s'%save_path)
+		output_image = draw_labels(boxes, confs, colors, class_ids, classes, image, indexes)
+		cv2.imwrite(save_path, output_image)	# save detected image
 
 def camera_detect(directory='data/picam'):
-    cam_resolution = (640,480)  # defines camera resolution
-    cam_framerate = 90  # defines camera framerate
-    camera = setup_camera(cam_resolution, cam_framerate)
-    print('Camera setup with resolution %s - frame rate %d'%(camera.resolution, camera.framerate))
-    p = directory+'/_pi_img_tmp.jpg'    # path to save temporary captures image from Pi
-    cfd_threshold = 0.48	# confidence score threshold for filtering for nms
-    nms_threshold = 0.4 	# IoU threshold for non-max supression
-    model, classes, colors, output_layers = load_yolo()     # preload the neural network model
-    if is_verbose:
-        print('Loaded network model. Number of classes = %d:'%len(classes),' '.join(classes))
-        print('Per class colors: ',colors)
+	cfd_threshold = 0.48	# confidence score threshold for filtering for nms
+	nms_threshold = 0.4 	# IoU threshold for non-max supression
+	cam_resolution = (640,480)  # defines camera resolution
+	cam_framerate = 90  # defines camera framerate
+
+	camera = setup_camera(cam_resolution, cam_framerate)
+	print('Camera setup with resolution %s - frame rate %d'%(camera.resolution, camera.framerate))
+	p = directory+'/_pi_img_tmp.jpg'    # path to save temporary captures image from Pi
+	model, classes, colors, output_layers = load_yolo()     # preload the neural network model
+	if is_verbose:
+		print('Loaded network model. Number of classes = %d:'%len(classes),' '.join(classes))
+		print('Per class colors: ',colors)
     
-    while True:
-        start = time.time()
-        camera.capture(p)
-        elapsed = time.time()-start
-        image, height, width, channels = load_image(p)
-        blob, outputs, elapsed = detect_objects(image, model, output_layers)
-        boxes, confs, class_ids = get_box_dimensions(outputs, height, width, cfd_threshold)
-        indexes = nms_bboxes(boxes,confs,cfd_threshold,nms_threshold) 	# performs nms to get final results
-        if is_verbose:
-            print('Captured image in %.3fms'%(elapsed*1000))
-            print('Prediction done in %.6f'%elapsed)	# debugging
-            print('Detection results:')
-            [print((boxes[i],confs[i],class_ids[i])) for i in range(len(boxes))]
-            print('NMS results:')
-            print(indexes)
-        # img = draw_labels(boxes, confs, colors, class_ids, classes, image, indexes)
-        send_notification(boxes,confs,class_ids,indexes)
+	while True: 
+		start = time.time()
+		camera.capture(p)
+		elapsed_cam = time.time()-start
+		image, height, width, channels = load_image(p)
+		blob, outputs, elapsed = detect_objects(image, model, output_layers)
+		boxes, confs, class_ids = get_box_dimensions(outputs, height, width, cfd_threshold)
+		indexes = nms_bboxes(boxes,confs,cfd_threshold,nms_threshold) 	# performs nms to get final results
+		if is_verbose:
+			print('Captured image in %.3fms'%(elapsed_cam*1000))
+			print('Prediction done in %.3fms'%(elapsed*1000))	# debugging
+			print('Detection results:')
+			[print((boxes[i],confs[i],class_ids[i])) for i in range(len(boxes))]
+			print('NMS results:')
+			print(indexes)
+		send_notification(boxes, confs, colors, class_ids, classes, image, indexes)
         
 
 if __name__ == '__main__':
