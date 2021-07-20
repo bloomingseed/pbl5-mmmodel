@@ -2,7 +2,16 @@ import time
 import cv2
 import numpy as np 
 import argparse
+
 from picamera import PiCamera
+import RPi.GPIO as GPIO
+
+# initializing GPIO
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+# setup buzzer pin
+BUZZER_PIN = 23	# defines buzzer pin connected to this Pi
+GPIO.setup(BUZZER_PIN, GPIO.OUT)
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--camera', help="True/False", default=False)
@@ -142,8 +151,31 @@ def get_timestamp():
 	d = datetime.now()
 	return '%sT%s'%(d.strftime('%Y%m%d'),d.strftime('%X').replace(':',''))
 
+NOTES = { 	# mapping from note to frequency at fourth scale
+	"c":262,
+	"d":294,
+	"e":330,
+	"f":349,
+	"g":392,
+	"a":440,
+	"b":494
+}
+NOTES_CLASSID = [NOTES['c'], NOTES['e'], NOTES['g'], NOTES['b']] 	# mapping class ids of this demo to 4 notes
+NOTES_DURATION = .5 	# defines the constant duration to play a note
+
+def buzz(noteFreq, duration=NOTES_DURATION):
+	halveWaveTime = 1 / (noteFreq * 2 ) 	# gets half a wave length from the note freq
+	waves = int(duration * noteFreq)	# number of waves = frequencies * duration;
+	for i in range(waves):
+		GPIO.output(BUZZER_PIN, True)
+		time.sleep(halveWaveTime)
+		GPIO.output(BUZZER_PIN, False)
+		time.sleep(halveWaveTime)
+	# time.sleep(duration*0.1)
 def send_notification(boxes, confs, colors, class_ids, classes, image, indexes):
 	'''Handle logic to send output to buzzer notification'''
+	for id in indexes: 	# for each recognized result index
+		buzz(NOTES_CLASSID[class_ids[id]])
 	# TODO: implement this function to send notification to buzzer
 	if is_verbose and len(indexes)>0:
 		save_path = './%s.jpg'%get_timestamp()	# sets save image path
