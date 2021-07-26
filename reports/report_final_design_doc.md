@@ -38,34 +38,19 @@
 
 
 # Kết quả (ghi lại quá trình triển khai in general)
+    - Dữ liệu train:
+        - Bao nhiêu class
+        - Số ảnh mỗi class, cách thu thập: download sẵn hay tự chụp, nếu tự chụp: độ phân giải ảnh, số kênh màu
+        - Tỷ lệ train/validate
+        - Bảng tổng kết tổ chức bộ dữ liệu: 
+    - Môi trường train: Google Colab, Thông số máy train: số core, số GPU, tốc độ CPU, kích thước RAM; cách train: lưu backup vào google drive.
+    - Đánh giá model: sử dụng bộ dữ liệu validation
+        - mAP@0.5, mAP@0.3
+        - bảng mAP của từng class
+    - Tốc độ thực thi:
+        - Thời gian suy diễn (chạy thuật toán học máy)
+        - Chu kỳ 1 lần hoạt động
 
-## Huấn luyện mô hình học máy
-- Dữ liệu input
-    - Where or/and how
-    - What is it like: độ phân giải, số kênh màu
-    - How much: total/train/test
-- Công cụ và framework đã dùng 
-- Tham số, thông tin chi tiết của mô hình học máy
-- Kết quả huấn luyện: mAP chi tiết, training chart?, bar chart mAP for each class?...
-- Đánh giá kết quả: so với chỉ tiêu có thỏa mãn hay không
-
-## Chức năng nhận diện
-- Cách build
-- Dữ liệu input:
-    - Where or/and how
-    - What is it like: độ phân giải, số kênh màu
-- Điều kiện thực nghiệm:
-    - Tham số hàm API: IoU threshold, NMS threshold, (*there is 1 more threshold in the prediction code. Search it!*)
-- Kết quả: 
-    - FPS, độ ổn định
-    - Dùng 1 metric nào đó để đánh giá
-- Đánh giá kết quả nhận diện:
-
-## Chức năng thông báo tọa độ GPS
-- Cách build
-- Điều kiện thực nghiệm
-- Output kết quả
-- Đánh giá kết quả
 
 # Kết luận
 - Đánh giá chung
