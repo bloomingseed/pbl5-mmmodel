@@ -8,7 +8,7 @@
     - person: (total, train, test) = (2000,1600,400)
     - car: (2000,1600,400)
     - motorcycle: (2000,1600,400)
-    - vinh: (1680,1344,336)
+    - vinh: (1680,1344,336) ? (1608,1286,322)
 
 # Python code for preparing dataset
 - For preparing first 3 classes from COCO dataset, we used [this notebook](https://colab.research.google.com/drive/11bmMNcjb00jYlOPjOk8_AMYH105ZO-AX?usp=sharing)

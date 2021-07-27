@@ -16,5 +16,7 @@ Where option is one of:
 # Demo results
 - See images `results-demo-?.jpg` and `results-demo-console.jpg`.
 - Performance:
-   - Average inference time: 1571.152ms
-   - Average interval: 2071.220ms
+    - Average inference time: 960ms
+    - Minimal total interval: 1532ms
+    - Each detection takes minimal notification time: 500ms
+    - Max FPS: 1.042

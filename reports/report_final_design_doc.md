@@ -50,6 +50,11 @@
     - Tốc độ thực thi:
         - Thời gian suy diễn (chạy thuật toán học máy)
         - Chu kỳ 1 lần hoạt động
+    - Hệ thống được kiểm thử thực tế với:
+        - Điều kiện thiết bị
+        - Điều kiện môi trường
+        - Quy trình kiểm thử
+        - Kết quả kiểm thử
 
 
 # Kết luận
