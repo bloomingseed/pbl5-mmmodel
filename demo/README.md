@@ -20,3 +20,5 @@ Where option is one of:
     - Minimal total interval: 1532ms
     - Each detection takes minimal notification time: 500ms
     - Max FPS: 1.042
+- Power consumption:
+    - DC power source 5V-3A: >4hrs
