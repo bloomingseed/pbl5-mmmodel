@@ -4,6 +4,8 @@
 # How to prepare the dataset we used
 - For person, car and motorcycle classes, we use images from [COCO dataset](https://cocodataset.org/) and we take 2000 images equally separated using `np.linspace` for each such category (person, car, motorcycle).
 - For `vinh` dataset, we captured him using phone camera which produced 70 images at 1280x720 resolution. Then for each image, we performed 24 types of image augmenting (i.e. Rotate(0), Rotate(45), Rotate(-45), Rotate(135), Rotate(-135), HorizontalFlip; each further does: scale(.3,.3), scale(-.3,-.3), randomHSV(hue=0,saturation=(10,30),value=(10,50))). This expands our `vinh` dataset to 1680 images total.
+- Newer augmenting only does: Rotate (0,45,-45), Flip (horizontal); each of that does RandomHSV (modify brightness -50 and color -10)
+- Captured images are then resized from 1280x720 to 640x360px.
 - All together, using 80/20 train/test split, our dataset structure is:
     - person: (total, train, test) = (2000,1600,400)
     - car: (2000,1600,400)
@@ -12,4 +14,4 @@
 
 # Python code for preparing dataset
 - For preparing first 3 classes from COCO dataset, we used [this notebook](https://colab.research.google.com/drive/11bmMNcjb00jYlOPjOk8_AMYH105ZO-AX?usp=sharing)
-- For preparing `vinh` dataset, we used `` notebook on captured images inside ? folder.
+- For preparing `vinh` dataset, we used `` notebook on captured images inside "source code" folder.
